@@ -89,6 +89,16 @@
 const API_BASE = 'http://localhost:5000/api';
 let token = '';
 let userRole = '';
+// Example Express route
+app.post('/api/auth/register', async (req, res) => {
+  const { name, email, password, department, role } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  const model = role === 'lecturer' ? Lecturer : Supervisor;
+  model.create({ name, email, password: hashed, department }, (err, result) => {
+    if (err) return res.status(500).json({ msg: 'Error creating account' });
+    res.status(201).json({ msg: 'Account created' });
+  });
+});
 
 // ---------- SHOW LOGIN / REGISTER ----------
 function showLogin() {
