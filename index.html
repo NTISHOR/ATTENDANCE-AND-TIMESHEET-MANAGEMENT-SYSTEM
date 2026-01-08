@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Attendance & Timesheet System</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #f4f4f4; }
-    input, select, button { margin: 5px 0; padding: 5px; }
-    h2 { margin-top: 30px; }
-    .hidden { display: none; }
-  </style>
+<meta charset="UTF-8">
+<title>Attendance & Timesheet System</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+<style>
+  
+</style>
 </head>
 <body>
 
@@ -89,17 +84,6 @@
 const API_BASE = 'http://localhost:5000/api';
 let token = '';
 let userRole = '';
-// Example Express route
-app.post('/api/auth/register', async (req, res) => {
-  const { name, email, password, department, role } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const model = role === 'lecturer' ? Lecturer : Supervisor;
-  model.create({ name, email, password: hashed, department }, (err, result) => {
-    if (err) return res.status(500).json({ msg: 'Error creating account' });
-    res.status(201).json({ msg: 'Account created' });
-  });
-});
-
 
 // ---------- SHOW LOGIN / REGISTER ----------
 function showLogin() {
