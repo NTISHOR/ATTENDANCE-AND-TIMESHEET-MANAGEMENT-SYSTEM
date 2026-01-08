@@ -1,50 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Attendance & Timesheet System</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>University Attendance System</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Attendance & Timesheet System</h1>
+<h1>University Attendance & Timesheet System</h1>
 
-<!-- LOGIN / REGISTER -->
+<!-- LOGIN -->
 <div id="loginDiv">
   <h2>Login</h2>
-  <input type="email" id="email" placeholder="Email"><br>
+  <input type="text" id="uid" placeholder="Unique ID"><br>
   <input type="password" id="password" placeholder="Password"><br>
-  <select id="role">
-    <option value="lecturer">Lecturer</option>
-    <option value="supervisor">Supervisor</option>
-  </select><br>
   <button onclick="login()">Login</button>
-  <p>Don't have an account? <button onclick="showRegister()">Register</button></p>
-</div>
-
-
-<div id="registerDiv" class="hidden">
-  <h2>Register</h2>
-  <input type="text" id="reg_name" placeholder="Full Name"><br>
-  <input type="email" id="reg_email" placeholder="Email"><br>
-  <input type="password" id="reg_password" placeholder="Password"><br>
-  <input type="text" id="reg_department" placeholder="Department"><br>
-  <select id="reg_role">
-    <option value="lecturer">Lecturer</option>
-    <option value="supervisor">Supervisor</option>
-  </select><br>
-  <button onclick="register()">Register</button>
-  <p>Already have an account? <button onclick="showLogin()">Login</button></p>
 </div>
 
 <!-- LECTURER DASHBOARD -->
 <div id="lecturerDiv" class="hidden">
   <h2>Lecturer Dashboard</h2>
-  <table id="lecturerTable">
+  <h3>Submit Class</h3>
+  <input type="text" id="course_name" placeholder="Course Name"><br>
+  <input type="date" id="class_date"><br>
+  <button onclick="submitClass()">Submit Class</button>
+  <h3>Approval Status</h3>
+  <table id="statusTable">
     <thead>
-      <tr>
-        <th>Course</th><th>Start Time</th><th>End Time</th><th>Notes</th><th>Action</th>
-      </tr>
+      <tr><th>Course</th><th>Date</th><th>Status</th><th>Remarks</th></tr>
     </thead>
     <tbody></tbody>
   </table>
@@ -54,34 +37,31 @@
 <!-- SUPERVISOR DASHBOARD -->
 <div id="supervisorDiv" class="hidden">
   <h2>Supervisor Dashboard</h2>
-  <label>Select Lecturer:</label>
-  <select id="lecturerSelect" onchange="loadClassRecords()"></select>
+  <h3>Create Lecturer</h3>
+  <input type="text" id="lec_name" placeholder="Full Name"><br>
+  <input type="email" id="lec_email" placeholder="Email"><br>
+  <input type="password" id="lec_password" placeholder="Password"><br>
+  <input type="text" id="lec_department" placeholder="Department"><br>
+  <button onclick="createLecturer()">Create Lecturer</button>
 
-  <table id="supervisorTable">
+  <h3>Approve Classes</h3>
+  <table id="classTable">
     <thead>
-      <tr>
-        <th>Course</th><th>Date</th><th>Start</th><th>End</th><th>Notes</th><th>Status</th><th>Action</th>
-      </tr>
+      <tr><th>Course</th><th>Lecturer</th><th>Date</th><th>Action</th><th>Remarks</th></tr>
     </thead>
     <tbody></tbody>
   </table>
-  <button onclick="showMonthlyReport()">Generate Monthly Report</button>
+
+  <h3>Monthly Report</h3>
+  <button onclick="generateReport()">Generate Monthly Report</button>
+  <table id="reportTable">
+    <thead>
+      <tr><th>Course</th><th>Lecturer</th><th>Date</th><th>Status</th><th>Remarks</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
   <button onclick="logout()">Logout</button>
-</div>
-
-<!-- MONTHLY REPORT -->
-<div id="monthlyReportDiv" class="hidden">
-  <h2>Monthly Report</h2>
-  <table id="monthlyReportTable">
-    <thead>
-      <tr>
-        <th>Course</th><th>Date</th><th>Start</th><th>End</th><th>Notes</th><th>Status</th><th>Remarks</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <button onclick="printReport()">Print Report</button>
-  <button onclick="hideMonthlyReport()">Close</button>
 </div>
 
 <script src="script.js"></script>
