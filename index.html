@@ -15,65 +15,90 @@
 </head>
 <body>
 
-  <h1>Attendance & Timesheet System</h1>
+<h1>Attendance & Timesheet System</h1>
 
-  <!-- LOGIN -->
-  <div id="loginDiv">
-    <h2>Login</h2>
-    <input type="email" id="email" placeholder="Email"><br>
-    <input type="password" id="password" placeholder="Password"><br>
-    <select id="role">
-      <option value="lecturer">Lecturer</option>
-      <option value="supervisor">Supervisor</option>
-    </select><br>
-    <button onclick="login()">Login</button>
-  </div>
+<!-- LOGIN / REGISTER -->
+<div id="loginDiv">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <select id="role">
+    <option value="lecturer">Lecturer</option>
+    <option value="supervisor">Supervisor</option>
+  </select><br>
+  <button onclick="login()">Login</button>
+  <p>Don't have an account? <button onclick="showRegister()">Register</button></p>
+</div>
 
-  <!-- LECTURER DASHBOARD -->
-  <div id="lecturerDiv" class="hidden">
-    <h2>Lecturer Dashboard</h2>
-    <table id="lecturerTable">
-      <thead>
-        <tr>
-          <th>Course</th>
-          <th>Start Time</th>
-          <th>End Time</th>
-          <th>Notes</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <button onclick="logout()">Logout</button>
-  </div>
+<div id="registerDiv" class="hidden">
+  <h2>Register</h2>
+  <input type="text" id="reg_name" placeholder="Full Name"><br>
+  <input type="email" id="reg_email" placeholder="Email"><br>
+  <input type="password" id="reg_password" placeholder="Password"><br>
+  <input type="text" id="reg_department" placeholder="Department"><br>
+  <select id="reg_role">
+    <option value="lecturer">Lecturer</option>
+    <option value="supervisor">Supervisor</option>
+  </select><br>
+  <button onclick="register()">Register</button>
+  <p>Already have an account? <button onclick="showLogin()">Login</button></p>
+</div>
 
-  <!-- SUPERVISOR DASHBOARD -->
-  <div id="supervisorDiv" class="hidden">
-    <h2>Supervisor Dashboard</h2>
-    <label>Select Lecturer:</label>
-    <select id="lecturerSelect" onchange="loadClassRecords()"></select>
+<!-- LECTURER DASHBOARD -->
+<div id="lecturerDiv" class="hidden">
+  <h2>Lecturer Dashboard</h2>
+  <table id="lecturerTable">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Notes</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button onclick="logout()">Logout</button>
+</div>
 
-    <table id="supervisorTable">
-      <thead>
-        <tr>
-          <th>Course</th>
-          <th>Date</th>
-          <th>Start</th>
-          <th>End</th>
-          <th>Notes</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <button onclick="logout()">Logout</button>
-  </div>
+<!-- SUPERVISOR DASHBOARD -->
+<div id="supervisorDiv" class="hidden">
+  <h2>Supervisor Dashboard</h2>
+  <label>Select Lecturer:</label>
+  <select id="lecturerSelect" onchange="loadClassRecords()"></select>
+
+  <table id="supervisorTable">
+    <thead>
+      <tr>
+        <th>Course</th>
+        <th>Date</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Notes</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button onclick="logout()">Logout</button>
+</div>
 
 <script>
 const API_BASE = 'http://localhost:5000/api';
 let token = '';
 let userRole = '';
+
+// ---------- SHOW LOGIN / REGISTER ----------
+function showLogin() {
+  document.getElementById('loginDiv').classList.remove('hidden');
+  document.getElementById('registerDiv').classList.add('hidden');
+}
+function showRegister() {
+  document.getElementById('loginDiv').classList.add('hidden');
+  document.getElementById('registerDiv').classList.remove('hidden');
+}
 
 // ---------- LOGIN FUNCTION ----------
 async function login() {
@@ -98,6 +123,29 @@ async function login() {
   }
 }
 
+// ---------- REGISTER FUNCTION ----------
+async function register() {
+  const name = document.getElementById('reg_name').value;
+  const email = document.getElementById('reg_email').value;
+  const password = document.getElementById('reg_password').value;
+  const department = document.getElementById('reg_department').value;
+  const role = document.getElementById('reg_role').value;
+
+  try {
+    const res = await fetch(API_BASE + '/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password, department, role })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.msg || 'Registration failed');
+    alert('Account created! Please login.');
+    showLogin();
+  } catch(e) {
+    alert(e.message);
+  }
+}
+
 // ---------- LOGOUT ----------
 function logout() {
   token = '';
@@ -110,6 +158,7 @@ function logout() {
 // ---------- LECTURER DASHBOARD ----------
 async function showLecturerDashboard() {
   document.getElementById('loginDiv').classList.add('hidden');
+  document.getElementById('registerDiv').classList.add('hidden');
   document.getElementById('lecturerDiv').classList.remove('hidden');
 
   const res = await fetch(API_BASE + '/lecturer/today-classes', {
@@ -154,6 +203,7 @@ async function submitClass(classId) {
 // ---------- SUPERVISOR DASHBOARD ----------
 async function showSupervisorDashboard() {
   document.getElementById('loginDiv').classList.add('hidden');
+  document.getElementById('registerDiv').classList.add('hidden');
   document.getElementById('supervisorDiv').classList.remove('hidden');
 
   const res = await fetch(API_BASE + '/supervisor/lecturers', {
